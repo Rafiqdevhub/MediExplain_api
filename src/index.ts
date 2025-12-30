@@ -1,62 +1,104 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import authRoutes from "./routes/authRoutes";
+import { config } from "./config/env";
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+app.disable("x-powered-by");
+app.use(morgan("dev"));
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Routes
-app.get("/", (req: Request, res: Response) => {
-  res.json({
-    message: "Welcome to MediExplain API",
-    status: "running",
-    timestamp: new Date().toISOString(),
-  });
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  next();
 });
 
-app.get("/api/health", (req: Request, res: Response) => {
+app.use(
+  cors({
+    origin: config.corsOrigins,
+    credentials: true,
+  })
+);
+
+app.use(cookieParser());
+app.use(express.json());
+
+app.get("/health", (req, res) => {
   res.json({
-    status: "healthy",
+    status: "OK",
+    service: "MediExplain_api",
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
+    version: "1.0.0",
+    environment: config.nodeEnv,
+    database: "connected",
+    features: {
+      authentication: "active",
+      emailService: "active",
+    },
   });
 });
 
-// Sample API endpoint
-app.get("/api/data", (req: Request, res: Response) => {
-  res.json({
-    data: [
-      { id: 1, name: "Item 1", description: "Sample item 1" },
-      { id: 2, name: "Item 2", description: "Sample item 2" },
-      { id: 3, name: "Item 3", description: "Sample item 3" },
-    ],
-  });
-});
+app.use("/api/auth", authRoutes);
 
-app.post("/api/data", (req: Request, res: Response) => {
-  const { name, description } = req.body;
-
-  if (!name || !description) {
-    return res.status(400).json({ error: "Name and description are required" });
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error("Error:", err.message);
+    res.status(500).json({
+      error: "Internal Server Error",
+      message: err.message,
+    });
   }
+);
 
-  res.status(201).json({
-    message: "Data created successfully",
-    data: { id: Date.now(), name, description },
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Not Found",
+    message: `Route ${req.originalUrl} not found`,
   });
 });
 
-// 404 handler
-app.use((req: Request, res: Response) => {
-  res.status(404).json({ error: "Route not found" });
-});
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(
-    `📊 Health check available at http://localhost:${PORT}/api/health`
-  );
-});
+    const errorDetails =
+      config.nodeEnv === "production"
+        ? { message: "Internal Server Error" }
+        : { message: err.message, stack: err.stack };
+
+    console.error(
+      `[${new Date().toISOString()}] Server error occurred:`,
+      err.message,
+      statusCode
+    );
+
+    res.status(statusCode).json({
+      error: "Server Error",
+      ...errorDetails,
+    });
+  }
+);
+
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`MediExplain_api running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;

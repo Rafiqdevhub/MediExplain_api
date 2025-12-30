@@ -1,0 +1,76 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1759070357585,
+      "tag": "0000_mushy_wendigo",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1759072094423,
+      "tag": "0001_strange_hitman",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759898087795,
+      "tag": "0002_chemical_silvermane",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1760636026950,
+      "tag": "0003_special_vengeance",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1760936724488,
+      "tag": "0004_white_giant_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1729483200000,
+      "tag": "0005_add_password_reset",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1761276031677,
+      "tag": "0006_glossy_the_santerians",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1764053907007,
+      "tag": "0007_chunky_ghost_rider",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1764056066226,
+      "tag": "0008_workable_the_enforcers",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1764056238954,
+      "tag": "0009_steady_freak",
+      "breakpoints": true
+    }
+  ]
+}

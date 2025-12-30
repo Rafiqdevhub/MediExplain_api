@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "selected_candidate" integer DEFAULT 0 NOT NULL;
