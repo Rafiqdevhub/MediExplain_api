@@ -19,9 +19,9 @@ export const requireEmailVerification = async (
     }
 
     const userResult = await db
-      .select({})
+      .select()
       .from(users)
-      .where(eq(users.id, parseInt(req.user.userId)))
+      .where(eq(users.id, req.user.userId))
       .limit(1);
 
     if (userResult.length === 0) {
@@ -35,16 +35,15 @@ export const requireEmailVerification = async (
 
     const user = userResult[0];
 
-    // if (!user.emailVerified) {
-    //   res.status(403).json({
-    //     success: false,
-    //     message: "Email verification required",
-    //     error:
-    //       "You must verify your email address to access this feature. Please check your email for the verification link.",
-    //     requiresVerification: true,
-    //   });
-    //   return;
-    // }
+    // Check if account is active
+    if (!user.isActive) {
+      res.status(403).json({
+        success: false,
+        message: "Account deactivated",
+        error: "Your account has been deactivated. Please contact support.",
+      });
+      return;
+    }
 
     next();
   } catch (error) {
@@ -52,7 +51,7 @@ export const requireEmailVerification = async (
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      error: "An error occurred while checking email verification status",
+      error: "An error occurred while checking account status",
     });
   }
 };

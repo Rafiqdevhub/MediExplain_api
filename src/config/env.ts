@@ -40,7 +40,7 @@ export const config = {
       user: process.env.SMTP_USER || "",
       pass: process.env.SMTP_PASS || "",
     },
-    from: process.env.EMAIL_FROM || "neatnode09@gmail.com",
+    from: process.env.EMAIL_FROM || "mediexplain123@gmail.com",
     verificationExpiry: parseInt(process.env.VERIFICATION_EXPIRY || "86400000"), // 24 hours in milliseconds
   },
 } as const;

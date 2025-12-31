@@ -3,7 +3,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import fs from "fs";
+import path from "path";
 import authRoutes from "./routes/authRoutes";
+import fileRoutes from "./routes/fileRoutes";
 import { config } from "./config/env";
 
 dotenv.config();
@@ -11,6 +14,13 @@ dotenv.config();
 const app = express();
 app.disable("x-powered-by");
 app.use(morgan("dev"));
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, "../uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log("Created uploads directory");
+}
 
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
@@ -38,12 +48,13 @@ app.get("/health", (req, res) => {
     database: "connected",
     features: {
       authentication: "active",
-      emailService: "active",
+      fileUpload: "active",
     },
   });
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/files", fileRoutes);
 
 app.use(
   (

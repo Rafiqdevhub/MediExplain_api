@@ -71,6 +71,13 @@
       "when": 1764056238954,
       "tag": "0009_steady_freak",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1767155152258,
+      "tag": "0010_adorable_gateway",
+      "breakpoints": true
     }
   ]
 }

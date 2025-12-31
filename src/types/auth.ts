@@ -1,7 +1,7 @@
 export interface RegisterRequest {
-  name: string;
+  fullName: string;
   email: string;
-  password: string; // For backward compatibility
+  password: string;
 }
 
 export interface LoginRequest {
@@ -9,72 +9,61 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface ResetPasswordRequest {
-  email: string;
-  newPassword: string;
-}
-
-export interface ForgotPasswordRequest {
-  email: string;
-}
-
-export interface ResetPasswordWithTokenRequest {
-  token: string;
-  newPassword: string;
-  confirmPassword: string;
-}
-
-export interface VerifyEmailRequest {
-  token: string;
-}
-
-export interface ResendVerificationRequest {
-  email: string;
-}
-
-export interface RefreshTokenRequest {
-  // Refresh token comes from HttpOnly cookie
-}
-
 export interface AuthResponse {
   success: boolean;
   message: string;
   data?: any;
   error?: string;
-  requiresVerification?: boolean;
 }
 
 export interface TokenPayload {
   userId: string;
   email: string;
+  plan: "free" | "pro" | "enterprise";
 }
 
-export interface TokenResponse {
-  accessToken: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-  };
+export interface UserResponse {
+  id: string;
+  fullName: string;
+  email: string;
+  isEmailVerified: boolean;
+  plan: "free" | "pro" | "enterprise";
+  filesUploadedCount: number;
+  monthlyFileLimit: number;
+  lastLimitReset: Date;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ProfileResponse {
   id: string;
-  name: string;
+  fullName: string;
   email: string;
+  plan: "free" | "pro" | "enterprise";
+  filesUploadedCount: number;
+  monthlyFileLimit: number;
+  lastLimitReset: Date;
+  isActive: boolean;
   createdAt: string;
-}
-
-export interface ChangePasswordRequest {
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
+  updatedAt: string;
 }
 
 export interface UpdateProfileRequest {
-  name?: string;
+  fullName?: string;
   currentPassword?: string;
   newPassword?: string;
   confirmPassword?: string;
+}
+
+export interface FileUploadResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    fileId: string;
+    fileName: string;
+    uploadedAt: Date;
+    filesRemaining: number;
+  };
+  error?: string;
 }
